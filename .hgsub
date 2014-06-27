@@ -1,0 +1,2 @@
+app/public/perseus = [git]https://github.com/Khan/perseus.git
+app/public/ke = [git]https://github.com/Khan/khan-exercises.git

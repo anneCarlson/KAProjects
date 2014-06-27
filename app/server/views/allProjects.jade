@@ -1,0 +1,27 @@
+extends navBar
+
+block pagecontent
+	div.page-container
+		h2.pageHeader Find A New Project
+		input#searchBar(placeholder="Search…", type="search", data-bind="value: query, valueUpdate: 'keyup'", autocomplete="off")
+		div(style="display: none", data-bind="visible: true")
+			ul#non-authored(data-bind="foreach: nonAuthored")
+				li#project-thumbnail
+					div.project(data-bind="click: $parent.getMoreInformation")
+						div.subproject
+							<!-- ko if: thumbnail -->
+							img(data-bind="attr: {src: thumbnail}")
+							<!-- /ko -->
+							<!-- ko ifnot: thumbnail -->
+							img(src="http://jencarey.files.wordpress.com/2011/05/khan_academy.jpg")
+							<!-- /ko -->
+							h3(data-bind="text: title")
+							div
+								p(data-bind="text: description")
+	include modals/alert
+	include modals/confirm
+
+block endscripts
+	script(src='/js/views/allProjects.js')
+	script(src='/js/controllers/allProjectsController.js')
+	script(src='/lib/knockout-3.1.0.js')

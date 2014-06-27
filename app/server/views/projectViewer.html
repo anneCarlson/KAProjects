@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<title>Perseus</title>
+
+<link rel="stylesheet" type="text/css" href="/ke/css/khan-site.css" />
+<link rel="stylesheet" type="text/css" href="/ke/css/khan-exercise.css" />
+<link rel="stylesheet" type="text/css" href="/lib/katex/fonts/fonts.css" />
+<link rel="stylesheet/less" type="text/css" href="/lib/katex/katex.less" />
+
+<link rel="stylesheet/less" type="text/css" href="/perseus/stylesheets/exercise-content-package/perseus.less" />
+<link rel="stylesheet/less" type="text/css" href="/perseus/stylesheets/perseus-admin-package/editor.less" />
+<link rel="stylesheet" type="text/css" href="/css/projectEditor.css" />
+<script>less = {env: 'development', logLevel: 1};</script>
+<script>
+  var projectID = "{{ projectID }}";
+</script>
+<script src="/lib/less.js"></script>
+
+</head>
+<body>
+
+  <div id="extras">
+    <button data-bind="click: score">
+      Score
+    </button>
+</div>
+
+<div data-bind="foreach: pages">
+  <div>
+    <span data-bind=
+          "text: pageTitle,
+           click: function() { $parent.currentPage($index()) }">
+    </span>
+  </div>
+</div>
+
+<!-- Begin Perseus HTML -->
+<div id="perseus-container" data-bind="viewerPage: viewer, props: json">
+  <div id="problemarea">
+    <div id="workarea"></div>
+    <div id="hintsarea"></div>
+  </div>
+  <div id="answer_area_wrap">
+    <div id="answer_area">
+      <form id="answerform">
+        <div id="answercontent">
+          <div id="solutionarea"></div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div style="clear: both;"></div>
+</div>
+<!-- End Perseus HTML -->
+
+<!-- put an empty div here so the margin on the perseus editor has something
+to "push against" (without the div, the padding goes off the page, and the
+add hint button ends up touching the bottom of the page). -->
+<div class="clear"></div>
+
+<script src="/lib/jquery.js"></script>
+<script src="/lib/underscore.js"></script>
+<script src="/lib/marked.js"></script>
+<script src="/lib/react-with-addons.js"></script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full&amp;delayStartupUntil=configured"></script>
+<script src="/lib/katex/katex.js"></script>
+<script src="/ke/local-only/kas.js"></script>
+<script src="/lib/knockout-3.1.0.js"></script>
+
+<script>
+    var icu = {
+        getDecimalFormatSymbols: function() {
+            return {
+                decimal_separator: ".",
+                grouping_separator: ",",
+                minus: "-"
+            };
+        }
+    };
+    var KhanUtil = {
+        debugLog: function() {},
+        localeToFixed: function(num, precision) {
+            return num.toFixed(precision);
+        }
+    };
+    var Khan = {
+        Util: KhanUtil,
+        error: function() {},
+        query: {debug: ""},
+        imageBase: "/ke/images/",
+        scratchpad: {
+            enable: function() {},
+            disable: function() {}
+        }
+    };
+    React.initializeTouchEvents(true);
+</script>
+
+<script src="/ke/local-only/jed.js"></script>
+<script src="/ke/local-only/i18n.js"></script>
+<script src="/ke/local-only/jquery.qtip.js"></script>
+<script src="/ke/exercises-stub.js"></script>
+<script src="/ke/local-only/require.js"></script>
+
+<script src="/js/controllers/projectViewer.js"></script>
+
+</body>
+</html>

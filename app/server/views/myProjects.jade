@@ -1,0 +1,116 @@
+extends navBar
+
+block pagecontent
+	div.container.page-container
+		div.row
+			div.span9
+				div.bs-example.bs-example-tabs
+					ul#myTab.nav.nav-tabs
+						li.active
+							a(href="#inProgress", data-toggle="tab") In Progress
+						li
+							a(href="#inQueue", data-toggle="tab") In Queue
+						li
+							a(href="#completed", data-toggle="tab") Completed
+						li
+							a(href="#authored", data-toggle="tab") Authored
+				div.tab-content#myTabContent(style="display: none", data-bind="visible: true")
+					div.tab-pane.fade.in.active#inProgress
+						ul#non-authored(data-bind="foreach: in_progress")
+							li.project-thumbnail
+								a(data-bind="attr: {href: '/viewProject/' + _id}")
+									div.project
+										div.subproject(data-bind="click: $parent.makeInProgress")
+											<!-- ko if: thumbnail -->
+											img(data-bind="attr: {src: thumbnail}")
+											<!-- /ko -->
+											<!-- ko ifnot: thumbnail -->
+											img(src="http://jencarey.files.wordpress.com/2011/05/khan_academy.jpg")
+											<!-- /ko -->
+											h3(data-bind="text: title")
+											div
+												p(data-bind="text: description")
+										button#more_information(data-bind="click: $parent.getMoreInformation") More Information
+					div.tab-pane.fade#inQueue
+						ul#non-authored(data-bind="foreach: queued")
+							li.project-thumbnail
+								div.project(data-bind="attr: { 'id': status}")
+									div.subproject(data-bind="click: $parent.makeInProgress")
+										<!-- ko if: thumbnail -->
+										img(data-bind="attr: {src: thumbnail}")
+										<!-- /ko -->
+										<!-- ko ifnot: thumbnail -->
+										img(src="http://jencarey.files.wordpress.com/2011/05/khan_academy.jpg")
+										<!-- /ko -->
+										h3(data-bind="text: title")
+										div
+											p(data-bind="text: description")
+									button#more_information(data-bind="click: $parent.getMoreInformation") More Information
+					div.tab-pane.fade#completed
+						ul#non-authored(data-bind="foreach: completed")
+							li.project-thumbnail
+								a(data-bind="attr: {href: '/viewProject/' + _id}")
+									div.project
+										div.subproject(data-bind="click: $parent.makeInProgress")
+											<!-- ko if: thumbnail -->
+											img(data-bind="attr: {src: thumbnail}")
+											<!-- /ko -->
+											<!-- ko ifnot: thumbnail -->
+											img(src="http://jencarey.files.wordpress.com/2011/05/khan_academy.jpg")
+											<!-- /ko -->
+											h3(data-bind="text: title")
+											div
+												p(data-bind="text: description")
+										button#more_information(data-bind="click: $parent.getMoreInformation") More Information
+					div.tab-pane.fade#authored
+						ul#authored(data-bind="foreach: authored")
+							li.project-thumbnail
+								a(data-bind="attr: {href: '/editProject/' + _id}")
+									div.project
+										div.subproject
+											<!-- ko if: thumbnail -->
+											img(data-bind="attr: {src: thumbnail}")
+											<!-- /ko -->
+											<!-- ko ifnot: thumbnail -->
+											img(src="http://jencarey.files.wordpress.com/2011/05/khan_academy.jpg")
+											<!-- /ko -->
+											h3(data-bind="text: title")
+											div
+												p(data-bind="text: description")
+										div
+											a(data-bind="attr: {href: '/viewProject/' + _id}") View Project
+						h2.pageHeader Create A New Project
+						div
+							a.btn.btn-primary(href='/createNewProject')
+								| New Project
+			div.span3
+				h3#recommended_exercises_header Recommended Exercises
+				div#recommended_exercises
+					div.btn-group
+						button.btn.btn-default.dropdown-toggle(type="button", data-toggle="dropdown") Working Towards: 
+							span(data-bind="text: current_selection().title")
+							span.caret
+						ul#recommend_dropdown.dropdown-menu
+							li
+								div(data-bind="click: getRecommendationsAll") All Projects
+							// ko foreach: queued2
+							li
+								div(data-bind="click: $parent.getRecommendations, text: title")
+							// /ko
+					ul(data-bind="foreach: recommendations")
+						li
+							a(target="_blank", data-bind="attr: {href: link}, text: display_name")
+				div
+					span Do you know some of these exercises? Update our data from your Khan Academy account:
+					button(data-bind="click: updateUserInfo")
+						span(data-bind="text: updating_text")
+	div.clear
+	include modals/alert
+	include modals/confirm
+
+block endscripts
+	script(src='/js/controllers/myProjectsController.js')
+	script(src='/lib/knockout-3.1.0.js')
+	script(src='/js/views/myProjects.js')
+	script(src='http://code.jquery.com/ui/1.9.1/jquery-ui.js')
+	script(src='http://getbootstrap.com/dist/js/bootstrap.min.js')

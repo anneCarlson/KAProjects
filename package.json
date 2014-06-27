@@ -1,0 +1,33 @@
+{
+  "name": "ProjectCreator",
+  "version": "0.0.0",
+  "description": "Webapp for creating Projects",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "William Zimrin, Samuel Dooman, Annie Carlson",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.7.0",
+    "consolidate": "^0.7.0",
+    "crypto": "0.0.3",
+    "emailjs": "0.3.3",
+    "express": "3.4.8",
+    "hogan.js": "2.0.x",
+    "jade": "0.27.7",
+    "moment": "1.7.2",
+    "mongodb": "^2.1.x",
+    "mongoose": "4.6.5",
+    "pem": "^1.4.0",
+    "q": "1.0.0",
+    "request": "^2.34.0",
+    "stylus": "0.31.0",
+    "temboo": "^1.7.7",
+    "underscore": "~1.6.0"
+  },
+  "engines": {
+    "npm": "1.1.65",
+    "node": "0.8.14"
+  }
+}

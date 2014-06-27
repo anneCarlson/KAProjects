@@ -1,0 +1,104 @@
+(function() {
+    var perseusInit = Perseus.init({});
+
+    var defaultQuestion = {
+        question: {
+            content: "",
+            wigets: {}
+        },
+        answerArea: {
+            options: {},
+            type: "input-number"
+        },
+        hints: []
+    };
+
+    ko.bindingHandlers.editorPage = {
+        init: function(element, valueAccessor, allBindings) {
+
+            var editorObservable = valueAccessor();
+            var props = allBindings.get("props");
+            var update = allBindings.get("updateProps");
+            if (!update) {
+                update = props;
+            }
+            
+            perseusInit.then(function() {
+
+                var updateJson = function(data, cb) {
+                    var old = props();
+                    update(_.extend({}, old, data));
+                };
+
+                var newProps = _.extend({}, defaultQuestion,
+                                        ko.unwrap(props),
+                                        { onChange: updateJson });
+
+                var editor = React.renderComponent(
+                    Perseus.EditorPage(newProps, null),
+                    element
+                );
+
+                var updateProps = function(newVal) {
+                    if (!newVal || !newVal.onChange) {
+                        newVal = _.extend({}, defaultQuestion, newVal, { onChange: updateJson });
+                    }
+                    editor.replaceProps(newVal);
+                };
+
+                props.subscribe(updateProps);
+
+                editorObservable(editor);
+
+            }).then(function() {
+            }, function(err) {
+                console.error(err);
+            });
+        }
+    }
+
+    ko.bindingHandlers.viewerPage = {
+        init: function(element, valueAccessor, allBindings) {
+            var viewerObservable = valueAccessor();
+            var props = allBindings.get("props");
+
+            var makeProp = function(item) {
+                return {
+                    item: _.extend({}, defaultQuestion, item),
+                    initialHintsVisible: false
+                };
+            };
+            
+            perseusInit.then(function() {
+                //stupid as shit dummy node because item renderer is coded weird
+                var itemMountNode = document.createElement("div");
+                var viewer = React.renderComponent(
+                    Perseus.ItemRenderer(makeProp(ko.unwrap(props)), null),
+                    itemMountNode
+                );
+
+                props.subscribe(function (newVal) {
+                    viewer.replaceProps(makeProp(newVal));
+                });
+
+                viewerObservable(viewer);
+            });
+        }
+    }
+
+    ko.bindingHandlers.formattedText = {
+        init: function (element, valueAccessor) {
+            perseusInit.then(function() {
+                this.viewer = React.renderComponent(
+                    Perseus.Renderer({ content: ko.unwrap(valueAccessor()),
+                                       widgets: [] }, null),
+                    element
+                );
+            });
+        },
+        
+        update: function (element, valueAccessor) {
+            this.viewer.setProps({ content: ko.unwrap(valueAccessor()) });
+        }
+    }
+})();

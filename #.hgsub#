@@ -1,0 +1,2 @@
+perseus = [git]https://github.com/Khan/perseus.git
+ke = [git]https://github.com/Khan/khan-exercises.git

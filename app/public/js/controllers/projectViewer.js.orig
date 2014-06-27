@@ -1,0 +1,145 @@
+(function() {
+
+    requirejs.config({
+        waitSeconds: 120
+    });
+
+    var controller = (function() {
+        
+        var self = {
+            id: projectID,
+            currentPage: ko.observable(0),
+            viewer: ko.observable(),
+            pages: ko.observableArray()
+        };
+
+        self.videos = ko.observableArray([
+            {
+                _id: "1234",
+                display_name: "Video 1",
+                url: "http://www.google.com"
+            },
+            {
+                _id: "1235",
+                display_name: "Video 2",
+                url: "http://www.google.com"
+            }
+        ]);
+
+        self.currentPageData = ko.computed(function() {
+            if (self.pages().length > self.currentPage())
+                return self.pages()[self.currentPage()];
+            else
+                return {};
+        });
+
+        self.scorePage = function () {
+            var score = self.viewer().scoreInput();
+            if (score.correct) {
+                self.currentPageData().completed = true;
+                self.pages.notifySubscribers();
+                showModal(
+                    'Correct!',
+                    'Congratulations!  Your answer was correct.  You should move on to the next page.');
+            } else {
+                showModal(
+                    "Failure.",
+                    "Sorry, your answer was wrong.  You are bad and should feel bad.");
+            }
+        };
+
+        self.unfinishedPages = ko.computed(function() {
+            return _.filter(
+                _.range(self.pages().length),
+                function(i) {
+                    var page = self.pages()[i];
+                    var out =
+                        (page.type == 'freeform' &&
+                         page.textInput &&
+                         (!page.userText || page.userText == "")) ||
+                        (page.type == 'exercise' &&
+                         !page.completed);
+                    return out;
+                }
+            );
+        });
+
+        self.json = ko.computed({
+            read: function() {
+                return self.currentPageData().pageJson;
+            },
+            deferEvaluation: true
+        });
+
+        self.currentInput = ko.computed({
+            read: function() {
+                return self.currentPageData().userText;
+            },
+            write: function(newVal) {
+                self.currentPageData().userText = newVal;
+                self.pages.notifySubscribers();
+            },
+            deferEvaluation: true
+        });
+
+        self.loadData = function(data) {
+            if (!data.contents)
+                data.contents = data.project_contents;
+            if (data.contents.length == 0) {
+                self.pages([{pageTitle: "page", pageJson: {}}]);
+            } else {
+                self.pages(JSON.parse(data.contents));
+            }
+            self.videos(_.map(data.videos, function (v) {
+                return JSON.parse(v);
+            }));
+        };
+
+        self.saveData = function() {
+            var data = {
+                id: self.id,
+                contents: JSON.stringify(self.pages())
+            };
+            $.post('/ajax/saveClonedProject/'+self.id, data, function() {
+                console.log("done");
+            });
+        };
+
+        self.submit = function() {
+            showModal('Submitting', 'Submitting your work');
+        };
+
+        self.init = function() {
+            var mainLoaded = $.get('/ajax/loadClonedProject/'+self.id, function (response) {
+                self.loadData(response);
+            });
+            
+            // Load khan-exercises modules, then perseus, then koperseus
+
+            //don't know why we need to load things like this, but changing it
+            //broke perseus.  If someone wants to change the load process,
+            //please do.
+            require(["/perseus/ke-deps.js"], function() {
+                // pre built
+                // require(["build/perseus.js"], initPerseus);
+
+                // pre built with source maps
+                require(["/perseus/build/perseus.debug.js"], initPerseus);
+
+                // built on demand
+                // require(["src/editor-page-shim.js"], initPerseus);
+            });
+
+            function initPerseus() {
+                mainLoaded.done(function () {
+                    ko.applyBindings(self);
+                });
+            }
+        };
+
+        return self;
+    })();
+
+    controller.init();
+
+})();

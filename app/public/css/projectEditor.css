@@ -1,0 +1,113 @@
+.editor-tabs {
+    display: inline-block;
+}
+
+div#extras {
+    display: inline-block;
+}
+
+.editor-tabs span {
+    margin: 5px 10px 5px 10px;
+}
+
+body {
+    height: auto;
+    min-height: 100%;
+    background: #fdfdfd;
+}
+
+div.page-container {
+}
+
+div.editor-content {
+    text-align: left;
+    width: 1000px;
+    display: none;
+}
+
+div#pages {
+    width: 190px;
+    float: left;
+    margin-right: 10px;
+}
+
+div#mainPageContainer {
+    width: 800px;
+    float: left;
+}
+
+div#pages input {
+    width: 180px;
+}
+
+div#pages select {
+    width: 190px;
+}
+
+div#pages h4 {
+    margin: 5px 0 5px 0;
+}
+
+div.pageControls {
+    color: #888;
+}
+
+div.pageControls div {
+    display: inline-block;
+    padding: 0 5;
+}
+
+label.checkLabel {
+    display: inline;
+}
+
+div#pages div.rename input {
+    width: 130px;
+    display: inline-block;
+}
+
+div.rename button {
+    display: inline-block;
+}
+
+.complete {
+    color: #0c0;
+}
+
+.selected {
+    color: red;
+    cursor: default;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.clickable:hover {
+    color: #aaa;
+}
+
+h3 {
+    margin-top: 22px;
+}
+
+h4 {
+    margin-bottom: 5px;
+}
+
+textarea {
+    width: 350px;
+    height: 150px;
+}
+
+img.thumbnailPreview {
+    border-radius: 5px;
+    max-width: 200px;
+    max-height: 150px;
+}
+
+input.file {
+    visibility: hidden;
+    width: 0px;
+    height: 0px;
+}

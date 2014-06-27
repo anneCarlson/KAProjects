@@ -1,0 +1,299 @@
+.page-container {
+	padding-top: 50px;
+	text-align: center;
+}
+
+li {
+    list-style-type: none;
+}
+
+.hide-at-start {
+	display: none;
+}
+
+.clear {
+  padding-bottom: 40px;
+}
+
+#updatingAccount{
+    text-align: center;
+    margin-top: 50px;
+}
+
+#signIn{
+    color: #4082A5;
+    font-size: 150%;
+    margin-bottom: 10px;
+    margin-left:115px;
+}
+
+#non-authored li, #authored li {
+	list-style-type: none;
+	display: inline-block;
+	width: 250px;
+	margin-top: 10px;
+	margin-right: 15px;
+	vertical-align: middle;
+}
+
+#non-authored li a:hover, #authored li a:hover {
+	text-decoration: none;
+}
+
+#settings-button {
+	width: 100px;
+	right: 108px;
+	position: absolute;
+	display: block;
+	margin: 0 10px 0 0;
+}
+
+.inline-thing{
+	display: inline;
+}
+
+.pageHeader {
+	color: #2270A0;
+}
+
+#searchBar {
+    text-align: left;
+}
+
+.project {
+	border: 1px solid #DDDDDD;
+	border-radius: 5px;
+	width: 250px;
+	height: 320px;
+	overflow: hidden;
+
+	text-align: center;
+	background-color: white;
+}
+
+.subproject {
+	margin-top: 0px;
+	color: #AAAAAA;
+
+	width: 200px;
+	overflow: hidden;
+	padding-left: 25px;
+	padding-bottom: 5px;
+	text-align: center;
+	height: 290px;
+	overflow: hidden;
+}
+
+#available {
+    border: 3px solid #006600;
+	border-radius: 5px;
+}
+
+.project:hover{
+	background-color: #E7F3F6;
+}
+
+.project img {
+	margin-top: 20px;
+    border-radius: 5px;
+    max-width: 200px;
+    max-height: 150px;
+}
+
+.project h3 {
+	margin-top: 5px;
+	width: 200px;
+	color: #4082A5;
+}
+
+button #more_information {
+    background-color: #4082A5;
+}
+
+.project div a {
+	text-decoration: underline;
+}
+
+#recommended_exercises_header{
+	margin-top: 5px;
+	color: #4082A5;
+}
+
+#recommend_dropdown div:hover{
+	background-color: #E7F3F6;
+}
+
+#recommended_exercises {
+    background-color: white;
+    text-align: left;
+    padding: 5px;
+}
+
+#recommended_exercises a{
+    color: #AAAAAA;
+    padding: 0px;
+    margin: 0px;
+}
+
+#recommended_exercises ul{
+    padding: 0px;
+    margin: 1px;
+}
+
+.ui-tabs.ui-tabs-vertical {
+    padding: 0;
+    width: 42em;
+}
+.ui-tabs.ui-tabs-vertical .ui-widget-header {
+    border: none;
+}
+.ui-tabs.ui-tabs-vertical .ui-tabs-nav {
+    float: left;
+    width: 10em;
+    background: #CCC;
+    border-radius: 4px 0 0 4px;
+    border-right: 1px solid gray;
+}
+.ui-tabs.ui-tabs-vertical .ui-tabs-nav li {
+    clear: left;
+    width: 100%;
+    margin: 0.2em 0;
+    border: 1px solid gray;
+    border-width: 1px 0 1px 1px;
+    border-radius: 4px 0 0 4px;
+    overflow: hidden;
+    position: relative;
+    right: -2px;
+    z-index: 2;
+}
+.ui-tabs.ui-tabs-vertical .ui-tabs-nav li a {
+    display: block;
+    width: 100%;
+    padding: 0.6em 1em;
+}
+.ui-tabs.ui-tabs-vertical .ui-tabs-nav li a:hover {
+    cursor: pointer;
+}
+.ui-tabs.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active {
+    margin-bottom: 0.2em;
+    padding-bottom: 0;
+    border-right: 1px solid white;
+}
+.ui-tabs.ui-tabs-vertical .ui-tabs-nav li:last-child {
+    margin-bottom: 10px;
+}
+.ui-tabs.ui-tabs-vertical .ui-tabs-panel {
+    float: left;
+    width: 28em;
+    border-left: 1px solid gray;
+    border-radius: 0;
+    position: relative;
+    left: -1px;
+}
+
+/* LEFT TAB CSS*/
+.tabs-below > .nav-tabs,
+.tabs-right > .nav-tabs,
+.tabs-left > .nav-tabs {
+  border-bottom: 0;
+}
+
+.tab-content > .tab-pane,
+.pill-content > .pill-pane {
+  display: none;
+}
+
+.tab-content > .active,
+.pill-content > .active {
+  display: block;
+}
+
+.tabs-below > .nav-tabs {
+  border-top: 1px solid #ddd;
+}
+
+.tabs-below > .nav-tabs > li {
+  margin-top: -1px;
+  margin-bottom: 0;
+}
+
+.tabs-below > .nav-tabs > li > a {
+  -webkit-border-radius: 0 0 4px 4px;
+     -moz-border-radius: 0 0 4px 4px;
+          border-radius: 0 0 4px 4px;
+}
+
+.tabs-below > .nav-tabs > li > a:hover,
+.tabs-below > .nav-tabs > li > a:focus {
+  border-top-color: #ddd;
+  border-bottom-color: transparent;
+}
+
+.tabs-below > .nav-tabs > .active > a,
+.tabs-below > .nav-tabs > .active > a:hover,
+.tabs-below > .nav-tabs > .active > a:focus {
+  border-color: transparent #ddd #ddd #ddd;
+}
+
+.tabs-left > .nav-tabs > li,
+.tabs-right > .nav-tabs > li {
+  float: none;
+}
+
+.tabs-left > .nav-tabs > li > a,
+.tabs-right > .nav-tabs > li > a {
+  min-width: 74px;
+  margin-right: 0;
+  margin-bottom: 3px;
+}
+
+.tabs-left > .nav-tabs {
+  float: left;
+  margin-right: 19px;
+  border-right: 1px solid #ddd;
+}
+
+.tabs-left > .nav-tabs > li > a {
+  margin-right: -1px;
+  -webkit-border-radius: 4px 0 0 4px;
+     -moz-border-radius: 4px 0 0 4px;
+          border-radius: 4px 0 0 4px;
+}
+
+.tabs-left > .nav-tabs > li > a:hover,
+.tabs-left > .nav-tabs > li > a:focus {
+  border-color: #eeeeee #dddddd #eeeeee #eeeeee;
+}
+
+.tabs-left > .nav-tabs .active > a,
+.tabs-left > .nav-tabs .active > a:hover,
+.tabs-left > .nav-tabs .active > a:focus {
+  border-color: #ddd transparent #ddd #ddd;
+  *border-right-color: #ffffff;
+}
+
+.tabs-right > .nav-tabs {
+  float: right;
+  margin-left: 19px;
+  border-left: 1px solid #ddd;
+}
+
+.tabs-right > .nav-tabs > li > a {
+  margin-left: -1px;
+  -webkit-border-radius: 0 4px 4px 0;
+     -moz-border-radius: 0 4px 4px 0;
+          border-radius: 0 4px 4px 0;
+}
+
+.tabs-right > .nav-tabs > li > a:hover,
+.tabs-right > .nav-tabs > li > a:focus {
+  border-color: #eeeeee #eeeeee #eeeeee #dddddd;
+}
+
+.tabs-right > .nav-tabs .active > a,
+.tabs-right > .nav-tabs .active > a:hover,
+.tabs-right > .nav-tabs .active > a:focus {
+  border-color: #ddd #ddd #ddd transparent;
+  *border-left-color: #ffffff;
+}
+

@@ -1,0 +1,172 @@
+extends projectPage
+
+block editorContent
+  script#searchTemplate(type="text/html")
+    div(data-bind="visible: !loaded()") Loading, please wait
+    div(data-bind="visible: loaded")
+      h3(data-bind="text: 'Current '+displayTitle")
+      ul(data-bind="foreach: selectedList")
+        li(class="clickable", data-bind="\
+          text: $parent.getName($data),\
+          click: function() {\
+            $parent.deselect($data);\
+          }")
+      h3(data-bind="text: 'All '+displayTitle")
+      ul(data-bind="foreach: allList")
+        li.clickable(data-bind="\
+          text: $parent.getName($data),\
+          click: function () {\
+            $parent.select($data);\
+          }")
+      span(data-bind="text: 'Search '+displayTitle")
+      input(type="text", data-bind="value: searchText, valueUpdate: 'input'")
+  div.editor-tabs(data-bind="foreach: tabs")
+    span(data-bind="\
+      text: $data,\
+      css: {\
+        selected: $data === $parent.currentTab(),\
+        clickable: $data !== $parent.currentTab()\
+      },\
+      click: function() {$parent.currentTab($data)}")
+  div(id="extras")
+    button(data-bind="click: saveData") Save Data
+    button(data-bind="click: publish") Publish
+
+  div(data-bind="visible: currentTab() === 'General Info'")
+    p
+      span Project Name:
+      input(type="text", data-bind="value: projectTitle, valueUpdate: 'input'")
+    p
+      span Project Description:
+      textarea(data-bind="value: projectDescription, valueUpdate: 'input'")
+    p
+      div Project Thumbnail:
+      div
+        button(data-bind="click: function() { thumbnail(''); }") Clear
+        button(data-bind="forwardClick: '#thumbnailInput'") Upload New Thumbnail
+        input#thumbnailInput.file(type="file", data-bind="\
+          upload: thumbnail,\
+          uploadProgress: thumbnailProgress")
+        span(data-bind="visible: thumbnailProgress") Uploading ...
+      div
+        img.thumbnailPreview(data-bind="attr: { src: thumbnail }")
+      div.error(data-bind="visible: thumbnail().substring(0,6) === 'error'")
+        | Sorry, there was an error when uploading your file.  Please try again
+      
+  div(data-bind="\
+    visible: currentTab() === 'Requirements',\
+    template: {\
+      name: 'searchTemplate',\
+      data: prereqs\
+    }")
+    
+  div(data-bind="\
+    visible: currentTab() === 'Videos',\
+    template: {\
+      name: 'searchTemplate',\
+      data: videos\
+    }")
+
+  div(data-bind="visible: currentTab() == 'Rubric'")
+    p Leave blank for no rubric
+    textarea(data-bind="value: rubric, valueUpdate: 'input'")
+    h3 Preview:
+    div(data-bind="formattedText: rubric")
+    
+  div(data-bind="visible: currentTab() === 'Content'")
+    div#pages
+      div
+        span New Page Title:
+        input(type="text", data-bind="\
+          value: newPageTitle,\
+          valueUpdate: 'input',\
+          onEnter: createPage")
+        select(data-bind="value: newPageType")
+          option(value="exercise") Exercise
+          option(value="freeform") Freeform
+          option(value="video") Video
+        button(data-bind="click: createPage") Create Page
+      h4 Pages:
+      div(data-bind="foreach: pages")
+        div(data-bind="\
+          css: { selected: $index() === $parent.currentPage() },\
+          visible: !($parent.renaming() && $index() === $parent.currentPage())")
+          span(data-bind="\
+            css: { clickable: $index() !== $parent.currentPage() },\
+            text: $parent.pageText($index()),\
+            click: function() { $parent.currentPage($index()) }")
+        div.rename(data-bind="visible: $parent.renaming() && $index() === $parent.currentPage()")
+          input(type="text", data-bind="value: $parent.pageRenameTitle, valueUpdate: 'input'")
+          button(data-bind="click: $parent.renamePage") Done
+        div.pageControls(data-bind="\
+          slideVisible: $index() === $parent.currentPage(),\
+          noAnimation: $parent.noAnimation()")
+          div.clickable(data-bind="\
+            click: $parent.movePage(-1),\
+            visible: $index() !== 0")
+            | up
+          div.clickable(data-bind="\
+            click: $parent.movePage(1),\
+            visible: $index() !== ($parent.pages().length-1)")
+            | down
+          div.clickable(data-bind="click: $parent.startRename")
+            | rename
+          div.clickable(data-bind="click: $parent.deletePage")
+            | delete
+    div#mainPageContainer
+      div(id="perseus-container", data-bind="\
+        editorPage: editor,\
+        props: json,\
+        visible: currentPage() < pages().length && pages()[currentPage()].type === 'exercise'")
+      div(data-bind="\
+        visible: currentPage() < pages().length && pages()[currentPage()].type === 'freeform'")
+        div
+          label#showFileInputLabel.checkLabel(for="showFileInput") Show File Input?
+          input#showFileInput(type="checkbox", data-bind="checked: fileInput")
+        div
+          label#textInputLabel.checkLabel(for="textInput") Show Text Input?
+          input#textInput(type="checkbox", data-bind="checked: textInput")
+        textarea(data-bind="value: text, valueUpdate: 'input'")
+        div Attached File:&nbsp
+          span(data-bind="text: fileName() == '' ? 'No File' : fileName")
+        div
+          button(data-bind="click: function() { file(''); fileName(''); }") Clear file
+          button(data-bind="forwardClick: '#fileInput'") Upload New File
+          input#fileInput.file(type="file", data-bind="\
+            upload: file,\
+            uploadProgress: fileProgress,\
+            uploadFilename: fileName")
+          span(data-bind="visible: fileProgress") Uploading ...
+          div.error(data-bind="visible: file() && file().substring(0,6) === 'error:'")
+            | Sorry, there was an error when uploading your file.  Please try again
+        h3 Preview:
+        div(data-bind="visible: file() && file() != ''") Download:&nbsp
+          a(data-bind="attr: {href: file}, text: fileName")
+        div(data-bind="formattedText: text")
+        div(data-bind="visible: fileInput")
+          div Attached File: No File
+          div
+            button Clear File
+            button Upload File
+
+        textarea(data-bind="visible: textInput")
+      div(data-bind="\
+        visible: currentPage() < pages().length && pages()[currentPage()].type === 'video'")
+        div
+          label(for="videoInput") Video URL (use share link, format: youtu.be/XXXX):
+          input#videoInput(data-bind="value: displayVideo, valueUpdate: 'input'")
+          button(data-bind="click: setVideo") Set
+        h3 Preview:
+        div(data-bind="visible: !video()") Invalid Youtube URL
+        iframe.video(
+          data-bind="\
+            attr: { src: '//www.youtube.com/embed/'+video() },\
+            visible: video"
+          width: "853"
+          height: "480"
+          frameborder: "0"
+          allowFullScreen)
+      
+
+block append endscripts
+  script(src="/js/controllers/projectEditor.js")

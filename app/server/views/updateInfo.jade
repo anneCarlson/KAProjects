@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	div#updatingAccount
+		h2.pageHeader Updating your account information 
+		|This may take a little while, so hold tight!
+		div(style='display: none')#user
+			|#{udata}
+
+block scripts
+	script(src='/vendor/jquery.min.js')
+	script(src='/vendor/jquery.form.js')
+	script(src='/vendor/bootstrap-modal.js')
+	script(src='/vendor/bootstrap-transition.js')
+	script(src='/js/views/updateInfo.js')

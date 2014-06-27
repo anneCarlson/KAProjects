@@ -1,0 +1,96 @@
+extends projectPage
+
+block editorContent
+  div#pages
+    h4 Pages:  
+    div(data-bind="foreach: pages")
+      div(data-bind="css: {\
+        selected: $index() === $parent.currentPage(),\
+        complete: !$parent.pageIncomplete($index())\
+      }")
+        span(data-bind="\
+          css: {clickable: $index() !== $parent.currentPage()},\
+          text: pageTitle,\
+          click: function() { $parent.currentPage($index()) }")
+    div(data-bind="\
+      visible: status() == 'complete' && rubric() != '',\
+      css: {\
+        clickable: currentPage() != -1,\
+        selected: currentPage() == -1\
+      },\
+      click: function() { currentPage(-1) }") Rubric
+    div(data-bind="visible: status() == 'in_progress'")
+      button(data-bind="click: saveData") Save
+      button(data-bind="\
+        click: submit,\
+        attr: {disabled: unfinishedPages().length !== 0}") Submit
+          
+  div#mainPageContainer
+    div(id="perseus-container",data-bind="\
+      viewerPage: viewer,\
+      props: json,\
+      visible: currentPageData().type === 'exercise'")
+      div(data-bind="visible: !pageIncomplete(currentPage())")
+        | You have already completed this page.
+      div(id="problemarea")
+        div(id="workarea")
+        div(id="hintsarea")
+        button(data-bind="visible: status() != 'complete', click: scorePage") Score
+      div(id="answer_area_wrap")
+        div(id="answer_area")
+          div(id="answercontent")
+            div(id="solutionarea")
+        h4 Helpful Videos
+        div#exerciseRelatedVideos(data-bind="foreach: videos")
+          div
+            a(data-bind="text: display_name, attr: { href: url }", target="_blank")
+      div(style="clear: both;")
+    div(data-bind="visible: currentPageData().type === 'freeform'")
+      div#problemarea
+        div(data-bind="visible: currentPageData().file && currentPageData().file != ''")
+          | Download:&nbsp
+          a(data-bind="\
+            attr: {href: currentPageData().file},\
+            text: currentPageData().fileName")
+        div(data-bind="formattedText: currentPageData().text")
+        div(data-bind="visible: currentPageData().fileInput")
+          div Attached File:&nbsp
+            a(data-bind="\
+              text: userFileName,\
+              visible: userFileName() && userFileName() != '',\
+              attr: { href: userFile }")
+            span(data-bind="visible: !userFileName() || userFileName() == ''") No File
+          div(data-bind="visible: status() != 'complete'")
+            button(data-bind="click: function() { userFile(''); userFileName(''); }") Clear file
+            button(data-bind="forwardClick: '#fileInput'") Upload New File
+            input#fileInput.file(type="file", data-bind="\
+              upload: userFile,\
+              uploadProgress: userFileProgress,\
+              uploadFilename: userFileName")
+            span(data-bind="visible: userFileProgress") Uploading ...
+            div.error(data-bind="visible: userFile() && userFile().substring(0,6) === 'error:'")
+              | Sorry, there was an error when uploading your file.  Please try again
+        textarea(data-bind="\
+          visible: currentPageData().textInput,\
+          attr: { disabled: status() == 'complete' },\
+          value: currentInput,\
+          valueUpdate: 'input'")
+      div#answer_area_wrap
+        h4 Helpful Videos
+        div#freeformRelatedVideos(data-bind="foreach: videos")
+          div
+            a(data-bind="text: display_name, attr: { href: url }", target="_blank")
+    div(data-bind="visible: currentPageData().type === 'video'")
+      iframe.video(
+        data-bind="attr: { src: '//www.youtube.com/embed/'+currentPageData().video } "
+        width: "853"
+        height: "480"
+        frameborder: "0"
+        allowFullScreen)
+    div(data-bind="visible: currentPage() === -1 && status() === 'complete'")
+      h4 Grading Rubric:
+      div(data-bind="formattedText: rubric")
+      
+
+block append endscripts
+  script(src="/js/controllers/projectViewer.js")

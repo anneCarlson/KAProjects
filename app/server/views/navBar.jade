@@ -1,0 +1,30 @@
+extends layout
+
+block content
+	div.navbar.navbar-fixed-top
+		div.navbar-inner
+			div.container-fluid
+				ul#global-nav.nav
+					span.brand Khan Projects
+				ul#global-nav.nav
+					li#myProjectsButton
+						a(href='/myProjects') My Projects
+					li#allProjectsButton
+						a(href='/allProjects') All Projects
+					li#homeButton
+						a(href='/home') Settings
+				button#btn-logout.btn.btn-primary
+					i.icon-lock.icon-white
+					| Sign Out
+	block pagecontent
+
+block scripts
+	script(src='/lib/jquery.js')
+	script(src='/vendor/jquery.form.js')
+	script(src='/vendor/bootstrap-modal.js')
+	script(src='/vendor/bootstrap-transition.js')
+	script(src='/lib/underscore.js')
+	script(src='/js/controllers/logout.js')
+	block endscripts
+
+	

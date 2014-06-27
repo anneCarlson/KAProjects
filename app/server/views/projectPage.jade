@@ -1,0 +1,79 @@
+extends navBar
+
+block head
+  link(rel="stylesheet", type="text/css", href="/ke/css/khan-site.css")
+  link(rel="stylesheet", type="text/css", href="/ke/css/khan-exercise.css")
+  link(rel="stylesheet", type="text/css", href="/lib/katex/fonts/fonts.css")
+  link(rel="stylesheet/less", type="text/css", href="/lib/katex/katex.less")
+  link(rel="stylesheet/less", type="text/css", href="/perseus/stylesheets/exercise-content-package/perseus.less")
+  link(rel="stylesheet/less", type="text/css", href="/perseus/stylesheets/perseus-admin-package/editor.less")
+  link(rel="stylesheet", type="text/css", href="/css/projectEditor.css")
+  script(src="/lib/less.js")
+  |<script>
+  = "var projectID = '" + projectID + "';"
+  |</script>
+
+block pagecontent
+  div.page-container
+    div.editor-content(data-bind="style: {display: 'inline-block'}")
+      block editorContent
+  include modals/alert
+
+block endscripts
+  script(src="/lib/marked.js")
+  script(src="/lib/react-with-addons.js")
+  script(src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full&amp;delayStartupUntil=configured")
+  script(src="/lib/katex/katex.js")
+  script(src="/ke/local-only/kas.js")
+  script(src="/lib/knockout-3.1.0.js")
+
+  script
+    var icu = {
+        getDecimalFormatSymbols: function() {
+            return {
+                decimal_separator: ".",
+                grouping_separator: ",",
+                minus: "-"
+            };
+        }
+    };
+    var KhanUtil = {
+        debugLog: function() {},
+        localeToFixed: function(num, precision) {
+            return num.toFixed(precision);
+        }
+    };
+    var Khan = {
+        Util: KhanUtil,
+        error: function() {},
+        query: {debug: ""},
+        imageBase: "/ke/images/",
+        scratchpad: {
+            enable: function() {},
+            disable: function() {}
+        }
+    };
+    React.initializeTouchEvents(true);
+
+    var showModal = function(title, text) {
+        $('.modal-alert .modal-header h3').text(title);
+        $('.modal-alert .modal-body p').html(text);
+        $('.modal-alert').modal('show');
+    };
+    $(document).ready(function() {
+        $('.modal-alert').modal({
+            show : false,
+            keyboard : false,
+            backdrop : 'static'
+        });
+    })
+
+
+  script(src="/ke/local-only/jed.js")
+  script(src="/ke/local-only/i18n.js")
+  script(src="/ke/local-only/jquery.qtip.js")
+  script(src="/ke/exercises-stub.js")
+  script(src="/ke/local-only/require.js")
+  script(src="/js/views/custom-bindings.js")
+  script(src="/js/controllers/s3upload.js")
+  

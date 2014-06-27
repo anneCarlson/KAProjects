@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<title>Perseus</title>
+
+<link rel="stylesheet" type="text/css" href="/ke/css/khan-site.css" />
+<link rel="stylesheet" type="text/css" href="/ke/css/khan-exercise.css" />
+<link rel="stylesheet" type="text/css" href="/lib/katex/fonts/fonts.css" />
+<link rel="stylesheet/less" type="text/css" href="/lib/katex/katex.less" />
+
+<link rel="stylesheet/less" type="text/css" href="/perseus/stylesheets/exercise-content-package/perseus.less" />
+<link rel="stylesheet/less" type="text/css" href="/perseus/stylesheets/perseus-admin-package/editor.less" />
+<link rel="stylesheet" type="text/css" href="/css/projectEditor.css" />
+<script>less = {env: 'development', logLevel: 1};</script>
+<script>
+  var projectID = "{{ projectID }}";
+</script>
+<script src="/lib/less.js"></script>
+
+</head>
+<body>
+
+<div data-bind="foreach: tabs">
+  <span data-bind="
+                   text: $data,
+                   css: { currentTab: $index() === $parent.currentTab() },
+                   click: function() {$parent.currentTab($index())}
+                   ">
+  </span>
+</div>
+
+<div id="extras">
+    <button data-bind="click: saveData">Save Data</button>
+</div>
+
+<div data-bind="visible: currentTab() === 2">
+  <p>
+    <span>Project Name: </span>
+    <input type="text" data-bind="value: projectTitle, valueUpdate: 'input'"></input>
+  </p>
+  <p>
+    <span>Project Description: </span>
+    <textarea data-bind="value: projectDescription, valueUpdate: 'input'"></textarea>
+  </p>
+</div>
+
+<div data-bind="visible: currentTab() === 1">
+  <h3>Current prereqs</h3>
+  <ul data-bind="foreach: currentPrereqsList">
+    <li data-bind="
+      text: $data,
+      click: function () {
+        $parent.currentPrereqs(_.omit($parent.currentPrereqs(), $data));
+      }
+      " />
+  </ul>
+  <h3>All prereqs</h3>
+  <ul data-bind="foreach: filteredPrereqs">
+    <li data-bind="
+      text: $data,
+      click: function () {
+        $parent.currentPrereqs()[$data] = true;
+        $parent.currentPrereqs.notifySubscribers();
+      }
+      " />
+  </ul>
+  <span>Search prereqs</span>
+  <input data-bind="value: searchText, valueUpdate: 'input'" type="text"></input>
+</div>
+
+<div data-bind="visible: currentTab() === 0">
+  <div>
+    <span>New Page title:</span>
+    <input type="text" data-bind="value: newPageTitle, valueUpdate: 'input'">
+    </input>
+    <button data-bind="click: createPage">Create Page</button>
+  </div>
+  <div data-bind="foreach: pages">
+    <div>
+      <span data-bind=
+       "text: pageTitle,
+        click: function() { $parent.currentPage($index()) }">
+      </span>
+      <span data-bind=
+            "click: function() { $parent.deletePage($index()) }">
+        delete
+      </span>
+    </div>
+  </div>
+
+  <!-- Begin Perseus HTML -->
+  <div id="perseus-container" data-bind="editorPage: editor, props: json">
+  </div>
+  <!-- End Perseus HTML -->
+</div>
+
+<!-- put an empty div here so the margin on the perseus editor has something
+to "push against" (without the div, the padding goes off the page, and the
+add hint button ends up touching the bottom of the page). -->
+<div class="clear"></div>
+
+<script src="/lib/jquery.js"></script>
+<script src="/lib/underscore.js"></script>
+<script src="/lib/marked.js"></script>
+<script src="/lib/react-with-addons.js"></script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full&amp;delayStartupUntil=configured"></script>
+<script src="/lib/katex/katex.js"></script>
+<script src="/ke/local-only/kas.js"></script>
+<script src="/lib/knockout-3.1.0.js"></script>
+
+<script>
+    var icu = {
+        getDecimalFormatSymbols: function() {
+            return {
+                decimal_separator: ".",
+                grouping_separator: ",",
+                minus: "-"
+            };
+        }
+    };
+    var KhanUtil = {
+        debugLog: function() {},
+        localeToFixed: function(num, precision) {
+            return num.toFixed(precision);
+        }
+    };
+    var Khan = {
+        Util: KhanUtil,
+        error: function() {},
+        query: {debug: ""},
+        imageBase: "/ke/images/",
+        scratchpad: {
+            enable: function() {},
+            disable: function() {}
+        }
+    };
+    React.initializeTouchEvents(true);
+</script>
+
+<script src="/ke/local-only/jed.js"></script>
+<script src="/ke/local-only/i18n.js"></script>
+<script src="/ke/local-only/jquery.qtip.js"></script>
+<script src="/ke/exercises-stub.js"></script>
+<script src="/ke/local-only/require.js"></script>
+
+<script src="/js/controllers/projectEditor.js"></script>
+<script type="text/javascript" src="/js/lodash.min.js"></script>
+<script type="text/javascript" src="/js/controllers/s3upload.js"></script>
+
+<script type="text/javascript">
+
+  /*
+      Below is an example of how to upload to S3
+
+      if the following code: <input type="file" id="files"/>
+      were included in the file, attaching the s3_upload function would
+      make all necessary calls to the server to upload whatever they
+      upload to #files to S3.
+
+      once it's finished, the onFinishS3Put function is called with param
+      public_url, where public_url is the link to the file on AWS.
+  */
+  function s3_upload(){
+    var s3upload = new S3Upload({
+        file_dom_selector: '#files',
+        s3_sign_put_url: '/sign_s3',
+        onProgress: function(percent, message) {
+            $('#status').html('Upload progress: ' + percent + '% ' + message);
+        },
+        onFinishS3Put: function(public_url) {
+            $('#status').html('Upload completed. Uploaded to: '+ public_url);
+            $("#avatar_url").val(public_url);
+            $("#preview").html('<img src="'+public_url+'" style="width:300px;" />');
+        },
+        onError: function(status) {
+            $('#status').html('Upload error: ' + status);
+        }
+    });
+  }
+
+  $(document).ready(function(){
+    $('#files').on("change", s3_upload);
+  })
+</script>
+
+</body>
+</html>
